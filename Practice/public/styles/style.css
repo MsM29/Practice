@@ -1,0 +1,40 @@
+.form{
+    position: absolute;
+    max-width: 200px;
+    top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.form h3{
+    font-weight: 100;
+}
+
+#but{
+    text-align: center;
+    padding: 5px; 
+	width: 100%; 
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
+
+.input-form input{
+    padding: 1px; 
+	width: 100%; 
+    border-color: white white grey;
+    border-style: solid;
+	box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+#warning
+{
+    margin: 0;
+    margin-bottom: 20px;
+    text-align: left;
+    color: red;
+    font-size: 80%;
+    height: 20px;
+}
