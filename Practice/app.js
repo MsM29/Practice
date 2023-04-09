@@ -28,6 +28,7 @@ app.post('/login', function (request, response) {
         // поиск по json
         let login = request.body.login;
         let password = request.body.password;
+        console.log(request.body)
 
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
