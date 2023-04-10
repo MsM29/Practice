@@ -1,4 +1,6 @@
+const { response } = require('express');
 const md5 = require('md5');
+const { after } = require('underscore');
 
 // функция отправляет данные в виде json с помощью post
 async function sendData(data) {
@@ -31,7 +33,7 @@ function hashData(dataJSON) {
 // обработка ответа от сервера
 function inputResult(responseFromServer) {
     if (responseFromServer === 'success_auth') {
-        alert('Успешная авторизация!');
+      alert('Успешная авторизация!');
     } else if (responseFromServer === 'wrong_password') {
         document.getElementById('warning').innerHTML = 'Неверный пароль';
     } else {

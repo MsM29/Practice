@@ -17,8 +17,8 @@ function start_server() {
 const pool = mysql.createPool({
 	host     : 'localhost',
 	user     : 'root',
-	password : 'Ckj:ysqg@hjkm215',
-	database : 'node_auth'
+	password : 'maksfromtg_2002',
+	database : 'nodelogin'
 });
 
 // парсеры для данных
