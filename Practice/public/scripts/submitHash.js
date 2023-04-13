@@ -22,10 +22,10 @@ function serializeForm(form) {
 
 // функция хеширования
 function hashData(dataJSON) {
-    let parseDate = JSON.parse(dataJSON);
-    const hash = md5(parseDate.password);
-    parseDate.password = hash;
-    return JSON.stringify(parseDate);
+    let parseData = JSON.parse(dataJSON);
+    const hash = md5(parseData.password);
+    parseData.password = hash;
+    return JSON.stringify(parseData);
 }
 
 // обработка ответа от сервера
