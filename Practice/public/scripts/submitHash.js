@@ -1,10 +1,13 @@
 const md5 = require('md5');
 
+
 // функция отправляет данные в виде json с помощью post
-async function sendData(data) {
-    return await fetch('/login', {
+function sendData(data) {
+    return fetch('/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: data,
     });
 }
@@ -22,17 +25,19 @@ function serializeForm(form) {
 
 // функция хеширования
 function hashData(dataJSON) {
-    let parseDate = JSON.parse(dataJSON);
-    const hash = md5(parseDate.password);
-    parseDate.password = hash;
-    return JSON.stringify(parseDate);
+    let parseData = JSON.parse(dataJSON);
+    const hash = md5(parseData.password);
+    parseData.password = hash;
+    return JSON.stringify(parseData);
 }
 
 // обработка ответа от сервера
 function inputResult(responseFromServer) {
-    if (responseFromServer === 'success_auth') {
-      alert('Успешная авторизация!');
-    } else if (responseFromServer === 'wrong_password') {
+    console.log(responseFromServer); // для отладки
+
+    if (responseFromServer.message === 'success_auth') {
+        window.location.pathname = '/home';
+    } else if (responseFromServer.message === 'wrong_password') {
         document.getElementById('warning').innerHTML = 'Неверный пароль';
     } else {
         document.getElementById('warning').innerHTML = 'Пользователя не существует';
@@ -50,8 +55,9 @@ async function handleSubmit(event) {
     //отправка данных
     const response = await sendData(hashJSON);
 
-    let responseFromServer = (await response.text()).toString();
-    inputResult(responseFromServer);
+    response.json().then(function (data) {
+        inputResult(data);
+    });
 }
 
 const form = document.getElementById('login-form');
