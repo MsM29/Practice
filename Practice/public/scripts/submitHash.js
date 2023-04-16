@@ -1,6 +1,4 @@
-const { response } = require('express');
 const md5 = require('md5');
-const { after } = require('underscore');
 
 // функция отправляет данные в виде json с помощью post
 async function sendData(data) {
