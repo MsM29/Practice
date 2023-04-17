@@ -55,117 +55,10 @@ eval("(function () {\n  var crypt = __webpack_require__(/*! crypt */ \"./node_mo
   \**************************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("const md5 = __webpack_require__(/*! md5 */ \"./node_modules/md5/md5.js\");\n\n// функция отправляет данные в виде json с помощью post\nfunction sendData(data) {\n  return fetch('/login', {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json'\n    },\n    body: data\n  });\n}\n\n// из формы достаются данные и преобразуются в json для отправки\nfunction serializeForm(form) {\n  const {\n    elements\n  } = form;\n  const array = Array.from(elements);\n  return JSON.stringify({\n    login: array[0].value,\n    password: array[1].value\n  });\n}\n\n// функция хеширования\nfunction hashData(dataJSON) {\n  let parseDate = JSON.parse(dataJSON);\n  const hash = md5(parseDate.password);\n  parseDate.password = hash;\n  return JSON.stringify(parseDate);\n}\n\n// обработка ответа от сервера\nfunction inputResult(responseFromServer) {\n  console.log(responseFromServer); // для отладки \n\n  if (responseFromServer.message === 'success_auth') {\n    window.location.pathname = '/home';\n  } else if (responseFromServer.message === 'wrong_password') {\n    document.getElementById('warning').innerHTML = 'Неверный пароль';\n  } else {\n    document.getElementById('warning').innerHTML = 'Пользователя не существует';\n  }\n}\n\n// обработчик события submit\nasync function handleSubmit(event) {\n  //прерываем автоматическую передачу данных из формы\n  event.preventDefault();\n  const dataJson = serializeForm(event.target);\n  const hashJSON = hashData(dataJson);\n\n  //отправка данных\n  const response = await sendData(hashJSON);\n  response.json().then(function (data) {\n    inputResult(data);\n  });\n}\nconst form = document.getElementById('login-form');\n// начинаем прослушивать событие отправки данных из формы\nform.addEventListener('submit', handleSubmit);\n\n// const button = document.getElementById('but');\n// button.addEventListener('click', handleSubmit);\n\n//# sourceURL=webpack://auth/./public/scripts/submitHash.js?");
+eval("const md5 = __webpack_require__(/*! md5 */ \"./node_modules/md5/md5.js\");\n\n// функция отправляет данные в виде json с помощью post\nasync function sendData(data) {\n  return await fetch('/login', {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json'\n    },\n    body: data\n  });\n}\n\n// из формы достаются данные и преобразуются в json для отправки\nfunction serializeForm(form) {\n  const {\n    elements\n  } = form;\n  const array = Array.from(elements);\n  return JSON.stringify({\n    login: array[0].value,\n    password: array[1].value\n  });\n}\n\n// функция хеширования\nfunction hashData(dataJSON) {\n  let parseData = JSON.parse(dataJSON);\n  const hash = md5(parseData.password);\n  parseData.password = hash;\n  return JSON.stringify(parseData);\n}\n\n// обработка ответа от сервера\nfunction inputResult(responseFromServer) {\n  console.log(responseFromServer); // для отладки\n  if (responseFromServer.message === 'success_auth') {\n    window.location.pathname = '/home';\n  } else if (responseFromServer.message === 'wrong_password') {\n    document.getElementById('warning').innerHTML = 'Неверный пароль';\n  } else {\n    document.getElementById('warning').innerHTML = 'Пользователя не существует';\n  }\n}\n\n// обработчик события submit\nasync function handleSubmit(event) {\n  //прерываем автоматическую передачу данных из формы\n  event.preventDefault();\n  const dataJson = serializeForm(event.target);\n  const hashJSON = hashData(dataJson);\n\n  //отправка данных\n  const response = await sendData(hashJSON);\n  response.json().then(function (data) {\n    inputResult(data);\n  });\n}\nconst form = document.getElementById('login-form');\n// начинаем прослушивать событие отправки данных из формы\nform.addEventListener('submit', handleSubmit);\n\n//# sourceURL=webpack://auth/./public/scripts/submitHash.js?");
 
 /***/ })
 
-<<<<<<< HEAD
-      a = (a + aa) >>> 0;
-      b = (b + bb) >>> 0;
-      c = (c + cc) >>> 0;
-      d = (d + dd) >>> 0;
-    }
-
-    return crypt.endian([a, b, c, d]);
-  };
-
-  // Auxiliary functions
-  md5._ff  = function (a, b, c, d, x, s, t) {
-    var n = a + (b & c | ~b & d) + (x >>> 0) + t;
-    return ((n << s) | (n >>> (32 - s))) + b;
-  };
-  md5._gg  = function (a, b, c, d, x, s, t) {
-    var n = a + (b & d | c & ~d) + (x >>> 0) + t;
-    return ((n << s) | (n >>> (32 - s))) + b;
-  };
-  md5._hh  = function (a, b, c, d, x, s, t) {
-    var n = a + (b ^ c ^ d) + (x >>> 0) + t;
-    return ((n << s) | (n >>> (32 - s))) + b;
-  };
-  md5._ii  = function (a, b, c, d, x, s, t) {
-    var n = a + (c ^ (b | ~d)) + (x >>> 0) + t;
-    return ((n << s) | (n >>> (32 - s))) + b;
-  };
-
-  // Package private blocksize
-  md5._blocksize = 16;
-  md5._digestsize = 16;
-
-  module.exports = function (message, options) {
-    if (message === undefined || message === null)
-      throw new Error('Illegal argument ' + message);
-
-    var digestbytes = crypt.wordsToBytes(md5(message, options));
-    return options && options.asBytes ? digestbytes :
-        options && options.asString ? bin.bytesToString(digestbytes) :
-        crypt.bytesToHex(digestbytes);
-  };
-
-})();
-
-},{"charenc":1,"crypt":2,"is-buffer":3}],5:[function(require,module,exports){
-const md5 = require('md5');
-
-// функция отправляет данные в виде json с помощью post
-async function sendData(data) {
-    return await fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: data,
-    });
-}
-
-// из формы достаются данные и преобразуются в json для отправки
-function serializeForm(form) {
-    const { elements } = form;
-    const array = Array.from(elements);
-
-    return JSON.stringify({
-        login: array[0].value,
-        password: array[1].value,
-    });
-}
-
-// функция хеширования
-function hashData(dataJSON) {
-    let parseData = JSON.parse(dataJSON);
-    const hash = md5(parseData.password);
-    parseData.password = hash;
-    return JSON.stringify(parseData);
-}
-
-// обработка ответа от сервера
-function inputResult(responseFromServer) {
-    if (responseFromServer === 'success_auth') {
-        alert('Успешная авторизация!');
-    } else if (responseFromServer === 'wrong_password') {
-        document.getElementById('warning').innerHTML = 'Неверный пароль';
-    } else {
-        document.getElementById('warning').innerHTML = 'Пользователя не существует';
-    }
-}
-
-// обработчик события submit
-async function handleSubmit(event) {
-    //прерываем автоматическую передачу данных из формы
-    event.preventDefault();
-
-    const dataJson = serializeForm(event.target);
-    const hashJSON = hashData(dataJson);
-
-    //отправка данных
-    const response = await sendData(hashJSON);
-
-    let responseFromServer = (await response.text()).toString();
-    inputResult(responseFromServer);
-}
-
-const form = document.getElementById('login-form');
-// начинаем прослушивать событие отправки данных из формы
-form.addEventListener('submit', handleSubmit);
-
-},{"md5":4}]},{},[5]);
-=======
 /******/ 	});
 /************************************************************************/
 /******/ 	// The module cache
@@ -201,4 +94,3 @@ form.addEventListener('submit', handleSubmit);
 /******/ 	
 /******/ })()
 ;
->>>>>>> dev

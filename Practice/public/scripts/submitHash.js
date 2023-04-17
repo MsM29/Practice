@@ -2,8 +2,8 @@ const md5 = require('md5');
 
 
 // функция отправляет данные в виде json с помощью post
-function sendData(data) {
-    return fetch('/login', {
+async function sendData(data) {
+    return await fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,6 @@ function hashData(dataJSON) {
 // обработка ответа от сервера
 function inputResult(responseFromServer) {
     console.log(responseFromServer); // для отладки
-
     if (responseFromServer.message === 'success_auth') {
         window.location.pathname = '/home';
     } else if (responseFromServer.message === 'wrong_password') {
@@ -63,3 +62,5 @@ async function handleSubmit(event) {
 const form = document.getElementById('login-form');
 // начинаем прослушивать событие отправки данных из формы
 form.addEventListener('submit', handleSubmit);
+
+

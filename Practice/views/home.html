@@ -1,12 +1,22 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="no-js">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Практика</title>
+    <script type="module" src="../public/scripts/js_for_home.js"></script>
 </head>
+
 <body>
-    <h1>Hi! Авторизация пройдена!</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <h1>Загрузить файл</h1>
+        <input type="file" name="filedata" />
+        <br></br>
+        <button type="submit">Загрузить файл</button>
+        <h2>Файлы <button type="button" id="update-button">Обновить</button></h2> 
+        <ul id="pathList"></ul>
+    </form>
 </body>
+
 </html>

@@ -3,7 +3,8 @@ const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const jwt_methods = require('./jwt_methods.js');
-
+const multer  = require("multer");
+const fs = require("fs");
 
 const port = 8080;
 const app = express(); // объект приложения
@@ -21,10 +22,10 @@ function start_server() {
 
 // данные для подключения к mysql
 const pool = mysql.createPool({
-	host     : 'localhost',
-	user     : 'root',
-	password : 'maksfromtg_2002',
-	database : 'nodelogin'
+    host: 'db4free.net',
+    user: 'jar_jar_binks',
+    password: 'sith_lord',
+    database: 'node_auth',
 });
 
 // парсеры для данных
@@ -41,8 +42,19 @@ app.get('/login', function (request, response) {
 });
 
 app.get('/home', jwt_methods.decodeAccessToken, function (request, response) {
-    console.log(request.cookies); //для отладки
-    response.sendFile(__dirname + '/views/home.html');
+    try {
+        if(request.headers['get-file-names']=='true')
+        {
+            const filenames = fs.readdirSync(__dirname+'/uploads');
+            response.send(JSON.stringify(filenames))
+            }
+        else{
+            response.sendFile(__dirname + '/views/home.html');
+        }
+    }
+    catch (error) {
+        console.log(error)
+    }
 });
 
 // обработка post-запроса на авторизацию
@@ -83,4 +95,25 @@ app.post('/login', function (request, response) {
     }
 });
 
+const storageConfig = multer.diskStorage({
+    destination: (req, file, cb) =>{
+        cb(null, "uploads");
+    },
+    filename: (req, file, cb) =>{
+        file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
+        cb(null, new Date().toDateString()+'-'+new Date().getHours().toString()+'.'+new Date().getMinutes().toString()+'.'+new Date().getSeconds().toString()+'.'+new Date().getMilliseconds().toString()+'-'+file.originalname);
+        }
+});
+ 
+app.use(express.static(__dirname));
+ 
+app.use(multer({storage:storageConfig}).single("filedata"));
+app.post("/upload", function (req, res) {
+   
+    let filedata = req.file;
+    if(!filedata)
+        res.send("Ошибка при загрузке файла");
+    else
+        res.send("Файл загружен");
+});
 start_server();
