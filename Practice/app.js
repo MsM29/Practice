@@ -117,6 +117,7 @@ const storageConfig = multer.diskStorage({
 
 app.use(multer({ storage: storageConfig }).single('filedata'));
 app.post('/upload', function (req, res) {
+    console.log(req.headers)
     let filedata = req.file;
     if (!filedata) res.send('Ошибка при загрузке файла');
     else res.send('Файл загружен');

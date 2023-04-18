@@ -1,0 +1,121 @@
+body {
+  margin: 10px 30px;
+}
+  
+  .drop-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px dashed #222;
+    color: #000000;
+    cursor: pointer;
+    transition: background .3s ease-in-out, border .3s ease-in-out;
+  margin-bottom: 10px;
+  }
+  
+  .drop-container:hover {
+    background: #eee;
+    border-color: #111;
+  }
+  
+  .drop-container:hover .drop-title {
+    color: #000000;
+  }
+  
+  .drop-title {
+    color: #000000;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    transition: color .2s ease-in-out;
+  }
+  
+  input[type=file] {
+    width: 350px;
+    max-width: 100%;
+    color: #444;
+    padding: 5px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #555;
+  }
+  
+  input[type=file]::file-selector-button {
+    margin-right: 20px;
+    border: none;
+    background: #000000;
+    padding: 10px 20px;
+    border-radius: 10px;
+    height: 40px;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+  }
+  
+  input[type=file]::file-selector-button:hover {
+    background: #2f2f30;
+  }
+
+  #upload-button{
+    display: inline-block;
+    margin-right: 20px;
+    border: none;
+    height: 40px;
+    background: #000000;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+  }
+  #upload-button:hover {
+    background: #2f2f30;
+  }
+  #update-button{
+    display: none;
+  }
+  
+  .file-container,.statistics-container {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    overflow: auto;
+    flex-direction: column;
+    height: 100%;
+    width: 50%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px dashed #222;
+    color: #000000;
+    transition: background .3s ease-in-out, border .3s ease-in-out;
+  }
+
+  .file-container:hover {
+    background: #eee;
+    border-color: #111;
+  }
+
+.container{
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  height: 550px;
+}
+
+  h2{
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 0%;
+  }
+
+  #pathList{
+    margin: 0%;
+  }

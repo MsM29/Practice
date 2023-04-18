@@ -20,6 +20,10 @@
     border-radius: 5px;
 }
 
+#but:hover{
+    background: #2f2f30;
+}
+
 .input-form input{
     padding: 1px; 
 	width: 100%; 

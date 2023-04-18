@@ -5,18 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Практика</title>
+    <link rel="stylesheet" type="text/css" href="styles/style_for_home.css">
     <script type="module" src="scripts/js_for_home.js"></script>
 </head>
 
 <body>
     <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-        <h1>Загрузить файл</h1>
-        <input type="file" name="filedata" />
-        <br>
-        <button style="display: block;" type="submit">Загрузить файл</button>
-        <h2 style="display: inline-block;">Файлы</h2> 
-        <button type="button" id="update-button">Обновить</button>
-        <ul id="pathList"></ul>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+        <label class="drop-container">
+            <span class="drop-title">Перетащите файл сюда</span>
+            <span>или</span>
+            <input type="file" class="buttons-in-flexbox" name="filedata"/>
+            <button type="submit" id="upload-button">Загрузить файл</button>
+        </label>
+        <label class="container">
+        <label class="file-container">
+             <h2>Файлы:</h2>
+             <button type="button" id="update-button">Обновить</button>
+            <ul id="pathList">Кликните для получения списка файлов</ul>
+        </label>
+        <label class="statistics-container">
+            <h2>Статистика:</h2>
+        </label>
+    </label>
     </form>
 </body>
 
