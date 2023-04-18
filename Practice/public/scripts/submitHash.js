@@ -1,5 +1,27 @@
 const md5 = require('md5');
 
+const form = document.getElementById('login-form');
+const button = document.getElementById('but');
+
+// начинаем прослушивать событие отправки данных из формы
+form.addEventListener('submit', handleSubmit);
+
+// обработчик события submit
+async function handleSubmit(event) {
+    //прерываем автоматическую передачу данных из формы и блокируем кнопку
+    event.preventDefault();
+    button.disabled = true;
+
+    const dataJson = serializeForm(event.target);
+    const hashJSON = hashData(dataJson);
+
+    //отправка данных
+    const response = await sendData(hashJSON);
+
+    response.json().then(function (data) {
+        inputResult(data);
+    });
+}
 
 // функция отправляет данные в виде json с помощью post
 async function sendData(data) {
@@ -39,28 +61,8 @@ function inputResult(responseFromServer) {
     } else if (responseFromServer.message === 'wrong_password') {
         document.getElementById('warning').innerHTML = 'Неверный пароль';
     } else {
-        document.getElementById('warning').innerHTML = 'Пользователя не существует';
+        document.getElementById('warning').innerHTML =
+            'Пользователя не существует';
     }
+    button.disabled = false;
 }
-
-// обработчик события submit
-async function handleSubmit(event) {
-    //прерываем автоматическую передачу данных из формы
-    event.preventDefault();
-
-    const dataJson = serializeForm(event.target);
-    const hashJSON = hashData(dataJson);
-
-    //отправка данных
-    const response = await sendData(hashJSON);
-
-    response.json().then(function (data) {
-        inputResult(data);
-    });
-}
-
-const form = document.getElementById('login-form');
-// начинаем прослушивать событие отправки данных из формы
-form.addEventListener('submit', handleSubmit);
-
-

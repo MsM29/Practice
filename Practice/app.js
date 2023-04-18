@@ -35,6 +35,7 @@ app.use(cookieParser());
 
 // отправка статических данных
 app.use('/login', express.static(__dirname + '/public'));
+app.use('/home', express.static(__dirname + '/public'));
 
 // обработчики get-запросов
 app.get('/login', function (request, response) {
@@ -43,6 +44,7 @@ app.get('/login', function (request, response) {
 
 app.get('/home', jwt_methods.decodeAccessToken, function (request, response) {
     try {
+
         if(request.headers['get-file-names']=='true')
         {
             const filenames = fs.readdirSync(__dirname+'/uploads');
@@ -104,9 +106,7 @@ const storageConfig = multer.diskStorage({
         cb(null, new Date().toDateString()+'-'+new Date().getHours().toString()+'.'+new Date().getMinutes().toString()+'.'+new Date().getSeconds().toString()+'.'+new Date().getMilliseconds().toString()+'-'+file.originalname);
         }
 });
- 
-app.use(express.static(__dirname));
- 
+
 app.use(multer({storage:storageConfig}).single("filedata"));
 app.post("/upload", function (req, res) {
    
@@ -116,4 +116,5 @@ app.post("/upload", function (req, res) {
     else
         res.send("Файл загружен");
 });
+
 start_server();
