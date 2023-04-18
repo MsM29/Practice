@@ -27,7 +27,7 @@ function loading(filenames) {
     removeAllChildNodes(pathList);
     filenames.forEach((filename) => {
         let path = document.createElement('a');
-        path.innerHTML = `<a href='uploads/${filename}' download>${filename}</a><br>`;
+        path.innerHTML = `<a href='./${filename}' download>${filename}</a><br>`;
         pathList.appendChild(path);
     });
 }

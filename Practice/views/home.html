@@ -9,12 +9,13 @@
 </head>
 
 <body>
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
         <h1>Загрузить файл</h1>
         <input type="file" name="filedata" />
         <br>
-        <button type="submit">Загрузить файл</button>
-        <h2>Файлы <button type="button" id="update-button">Обновить</button></h2> 
+        <button style="display: block;" type="submit">Загрузить файл</button>
+        <h2 style="display: inline-block;">Файлы</h2> 
+        <button type="button" id="update-button">Обновить</button>
         <ul id="pathList"></ul>
     </form>
 </body>
