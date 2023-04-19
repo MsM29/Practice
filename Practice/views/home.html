@@ -10,6 +10,14 @@
 </head>
 
 <body>
+    <div id="header">
+        <img id="logo" src="images/logo.png" alt="">
+        <div class="user">
+            <p>Вы вошли как: &nbsp</p>
+            <p  id="current-user"></p>
+            <button id="log-out" type="button">Выйти</button>
+        </div>
+    </div>
     <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
         <label class="drop-container">
             <input type="file" class="buttons-in-flexbox" name="filedata"/>

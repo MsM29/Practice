@@ -20,6 +20,7 @@ module.exports.decodeAccessToken = function (request, response, next) {
     try {
         const token = request.cookies.token.split(' ')[1];
         decodedToken = jwt.verify(token, secretKey);
+        request.user = decodedToken;
         console.log('decoded token: ', decodedToken)
         next();
     } catch (error) {

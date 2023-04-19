@@ -58,6 +58,7 @@ function inputResult(responseFromServer) {
     console.log(responseFromServer); // для отладки
     if (responseFromServer.message === 'success_auth') {
         window.location.pathname = '/home';
+
     } else if (responseFromServer.message === 'wrong_password') {
         document.getElementById('warning').innerHTML = 'Неверный пароль';
     } else {

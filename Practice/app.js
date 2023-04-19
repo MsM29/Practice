@@ -50,6 +50,7 @@ app.get('/home', jwt_methods.decodeAccessToken, function (request, response) {
             const filenames = fs.readdirSync(__dirname + '/uploads');
             response.send(JSON.stringify(filenames));
         } else {
+            response.cookie('login', request.user.login)
             response.sendFile(__dirname + '/views/home.html');
         }
     } catch (error) {
@@ -95,6 +96,13 @@ app.post('/login', function (request, response) {
         console.log(error);
     }
 });
+
+// log-out
+app.post('/log-out', function(request, response) {
+    response.clearCookie('token');s
+    response.clearCookie('login');
+    response.redirect('/login');
+})
 
 // настройка параметров сохранения файлов
 const storageConfig = multer.diskStorage({

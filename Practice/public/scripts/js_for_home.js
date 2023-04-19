@@ -1,9 +1,22 @@
 const button = document.getElementById('update-button');
 const fileUploader = document.getElementById('file-uploader');
 const pathList = document.getElementById('pathList');
+const logOutButton = document.getElementById('log-out');
+
+// прослушиваем событие нажатия на кнопку выхода
+logOutButton.addEventListener('click', logOut);
 
 // прослушиваем событие нажатия на кнопку обновления списка файлов
 button.addEventListener('click', getFileNames);
+
+// обработчик события для кнопки выхода
+async function logOut() {
+    await fetch('/log-out', {
+        method: 'POST'
+    }).then(() => {
+        window.location.pathname = '/login';
+    })
+}
 
 // получение списка файлов на сервере
 async function getFileNames() {
@@ -35,3 +48,11 @@ function loading(filenames) {
         pathList.appendChild(path);
     });
 }
+
+//получение логина пользователя
+const login = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("login="))
+    .split("=")[1]
+    .replace('%40', '@');
+document.getElementById('current-user').innerHTML = login;
