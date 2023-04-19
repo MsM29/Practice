@@ -2,8 +2,10 @@ const button = document.getElementById('update-button');
 const fileUploader = document.getElementById('file-uploader');
 const pathList = document.getElementById('pathList');
 
+// прослушиваем событие нажатия на кнопку обновления списка файлов
 button.addEventListener('click', getFileNames);
 
+// получение списка файлов на сервере
 async function getFileNames() {
     await fetch('/home', {
         method: 'GET',
@@ -17,12 +19,14 @@ async function getFileNames() {
     });
 }
 
+// очищаем список файлов на странице
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
 }
 
+// вставка ссылок для загрузки файлов на страницу
 function loading(filenames) {
     removeAllChildNodes(pathList);
     filenames.forEach((filename) => {
@@ -31,31 +35,3 @@ function loading(filenames) {
         pathList.appendChild(path);
     });
 }
-
-const droparea = document.querySelector(".drop-container")
-const submit= document.querySelector(".buttons-in-flexbox")
-
-droparea.addEventListener("dragover", (e) => {
-    e.preventDefault()
-    droparea.classList.add("hover")
-})
-
-droparea.addEventListener("dragleave", () => {
-    droparea.classList.remove("hover")
-})
-
-droparea.addEventListener("drop",(e)=>{
-    e.preventDefault();
-    const file = e.dataTransfer.files[0]
-// fetch("/upload",{
-//     method: "POST",
-//     headers: {
-//         'Content-Type': 'multipart/form-data',
-//     },
-//     body: file
-})
-    
-    // const type = file.type
-    // submit.file=file
-    // console.log(submit.file)
-// })

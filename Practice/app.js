@@ -96,6 +96,7 @@ app.post('/login', function (request, response) {
     }
 });
 
+// настройка параметров сохранения файлов
 const storageConfig = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads');
@@ -116,8 +117,9 @@ const storageConfig = multer.diskStorage({
 });
 
 app.use(multer({ storage: storageConfig }).single('filedata'));
+
+// проверка загрузки файлов
 app.post('/upload', function (req, res) {
-    console.log(req.headers)
     let filedata = req.file;
     if (!filedata) res.send('Ошибка при загрузке файла');
     else res.send('Файл загружен');
