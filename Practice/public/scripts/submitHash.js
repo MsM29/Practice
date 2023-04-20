@@ -12,7 +12,8 @@ async function handleSubmit(event) {
     event.preventDefault();
 
     button.disabled = true;
-    document.getElementById('warning').innerHTML = 'Обработка запроса на авторизацию...';
+    document.getElementById('warning').innerHTML =
+        'Обработка запроса на авторизацию...';
     const dataJson = serializeForm(event.target);
     const hashJSON = hashData(dataJson);
 
@@ -60,7 +61,6 @@ function inputResult(responseFromServer) {
     if (responseFromServer.message === 'success_auth') {
         document.getElementById('warning').innerHTML = ' ';
         window.location.pathname = '/home';
-
     } else if (responseFromServer.message === 'wrong_password') {
         document.getElementById('warning').innerHTML = 'Неверный пароль';
     } else {
