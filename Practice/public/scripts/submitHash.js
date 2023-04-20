@@ -10,8 +10,9 @@ form.addEventListener('submit', handleSubmit);
 async function handleSubmit(event) {
     //прерываем автоматическую передачу данных из формы и блокируем кнопку
     event.preventDefault();
-    button.disabled = true;
 
+    button.disabled = true;
+    document.getElementById('warning').innerHTML = 'Обработка запроса на авторизацию...';
     const dataJson = serializeForm(event.target);
     const hashJSON = hashData(dataJson);
 
@@ -57,6 +58,7 @@ function hashData(dataJSON) {
 function inputResult(responseFromServer) {
     console.log(responseFromServer); // для отладки
     if (responseFromServer.message === 'success_auth') {
+        document.getElementById('warning').innerHTML = ' ';
         window.location.pathname = '/home';
 
     } else if (responseFromServer.message === 'wrong_password') {

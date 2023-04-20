@@ -50,7 +50,7 @@ app.get('/home', jwt_methods.decodeAccessToken, function (request, response) {
             const filenames = fs.readdirSync(__dirname + '/uploads');
             response.send(JSON.stringify(filenames));
         } else {
-            response.cookie('login', request.user.login)
+            response.cookie('login', request.user.login);
             response.sendFile(__dirname + '/views/home.html');
         }
     } catch (error) {
@@ -64,6 +64,7 @@ app.post('/login', function (request, response) {
         const login = request.body.login;
         const hash = request.body.password;
 
+        // проверка пользователя по бд
         pool.query(
             'SELECT * FROM accounts WHERE login = ?',
             login,
@@ -77,15 +78,36 @@ app.post('/login', function (request, response) {
 
                 // если пользователь найден и хеши паролей совпали
                 if (results[0].hash == hash) {
+                    date =
+                        new Date().toISOString().slice(0, -14) +
+                        ' ' +
+                        new Date().toLocaleTimeString();
+
+                    // фиксируем время успешной авторизации в бд
+                    pool.query(
+                        'INSERT INTO auth_statistics (id, login, auth_time) VALUES (?, ?, ?);',
+                        [results[0].id, results[0].login, date],
+                        // callback для отладки
+                        function (error, results, fields) {      
+                            if (error) {
+                                console.log('Ошибка записи в auth_statistics');
+                                console.log(error);
+                            }
+                            console.log('Попытка авторизации зафиксирована');
+                        }
+                    );
+
+                    // генерация токена
                     const token = jwt_methods.generateAccessToken(
                         results[0].id,
                         results[0].login,
                         results[0].user_group
                     );
+
+                    // запись токена в куки и отправка сообщения об успешной авторизации
                     response.cookie('token', `Bearer ${token}`);
                     return response.json({
                         message: 'success_auth',
-                        token: token,
                     });
                 } else {
                     return response.json({ message: 'wrong_password' });
@@ -98,11 +120,11 @@ app.post('/login', function (request, response) {
 });
 
 // log-out
-app.post('/log-out', function(request, response) {
-    response.clearCookie('token');s
+app.post('/log-out', function (request, response) {
+    response.clearCookie('token');
     response.clearCookie('login');
     response.redirect('/login');
-})
+});
 
 // настройка параметров сохранения файлов
 const storageConfig = multer.diskStorage({
