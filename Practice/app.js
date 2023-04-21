@@ -5,6 +5,7 @@ const path = require('path');
 const jwt_methods = require('./jwt_methods.js');
 const multer = require('multer');
 const fs = require('fs');
+const md5 = require('md5');
 
 const port = 8080;
 const app = express(); // объект приложения
@@ -149,10 +150,26 @@ const storageConfig = multer.diskStorage({
 app.use(multer({ storage: storageConfig }).single('filedata'));
 
 // проверка загрузки файлов
-app.post('/upload', function (req, res) {
+app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
     let filedata = req.file;
     if (!filedata) res.send('Ошибка при загрузке файла');
-    else res.send('Файл загружен');
+    else 
+    {
+        //фиксируем загрузку файла в бд
+        pool.query(
+            'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
+            [req.user.id, filedata.originalname, new Date().toLocaleDateString() + ' ' +new Date().toLocaleTimeString().replace(/:/g, '.'),md5(fs.readFileSync(filedata.path,'utf-8'))],
+            // callback для отладки
+            function (error, results, fields) {      
+                if (error) {
+                    console.log('Ошибка записи в uploaded_files');
+                    console.log(error);
+                }
+                console.log('Загрузка файла зафиксирована');
+            }
+        );
+        res.send('Файл загружен');
+    }
 });
 
 start_server();
