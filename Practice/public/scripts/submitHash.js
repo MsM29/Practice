@@ -13,7 +13,7 @@ async function handleSubmit(event) {
 
     button.disabled = true;
     document.getElementById('warning').innerHTML =
-        'Обработка запроса на авторизацию...';
+        'Авторизация...';
     const dataJson = serializeForm(event.target);
     const hashJSON = hashData(dataJson);
 
