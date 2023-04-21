@@ -4,14 +4,11 @@ const form = document.getElementById('login-form');
 const button = document.getElementById('but');
 
 // начинаем прослушивать событие отправки данных из формы
-form.addEventListener('submit', handleSubmit);
-
-// обработчик события submit
-async function handleSubmit(event) {
+form.addEventListener('submit', async event => {
     //прерываем автоматическую передачу данных из формы и блокируем кнопку
     event.preventDefault();
-
     button.disabled = true;
+
     document.getElementById('warning').innerHTML =
         'Авторизация...';
     const dataJson = serializeForm(event.target);
@@ -19,11 +16,8 @@ async function handleSubmit(event) {
 
     //отправка данных
     const response = await sendData(hashJSON);
-
-    response.json().then(function (data) {
-        inputResult(data);
-    });
-}
+    response.json().then(data => inputResult(data));
+});
 
 // функция отправляет данные в виде json с помощью post
 async function sendData(data) {

@@ -20,7 +20,6 @@ module.exports.decodeAccessToken = function (request, response, next) {
         const token = request.cookies.token.split(' ')[1];
         decodedToken = jwt.verify(token, secretKey);
         request.user = decodedToken;
-        console.log('Декодированный токен: ', decodedToken)    // для отладки
         next();
     } catch (error) {
         response.status(401).json({ message: 'Пользователь не авторизован' });

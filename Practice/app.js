@@ -89,7 +89,7 @@ app.post('/login', function (request, response) {
                         'INSERT INTO auth_statistics (id, login, auth_time) VALUES (?, ?, ?);',
                         [results[0].id, results[0].login, date],
                         // callback для отладки
-                        function (error, results, fields) {      
+                        function (error, results, fields) {
                             if (error) {
                                 console.log('Ошибка записи в auth_statistics');
                                 console.log(error);
@@ -106,6 +106,7 @@ app.post('/login', function (request, response) {
                     );
 
                     // запись токена в куки и отправка сообщения об успешной авторизации
+                    console.log('Авторизация пройдена');
                     response.cookie('token', `Bearer ${token}`);
                     return response.json({
                         message: 'success_auth',
@@ -129,14 +130,14 @@ app.post('/log-out', function (request, response) {
 
 // настройка параметров сохранения файлов
 const storageConfig = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads');
+    destination: (req, file, callback) => {
+        callback(null, 'uploads');
     },
-    filename: (req, file, cb) => {
+    filename: (req, file, callback) => {
         file.originalname = Buffer.from(file.originalname, 'latin1').toString(
             'utf8'
         );
-        cb(
+        callback(
             null,
             new Date().toLocaleDateString() +
                 ' ' +
@@ -152,15 +153,24 @@ app.use(multer({ storage: storageConfig }).single('filedata'));
 // проверка загрузки файлов
 app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
     let filedata = req.file;
-    if (!filedata) res.send('Ошибка при загрузке файла');
-    else 
-    {
+    if (!filedata) res.json({ message: 'Ошибка при загрузке файла!' });
+    else {
         //фиксируем загрузку файла в бд
+        date =
+            new Date().toISOString().slice(0, -14) +
+            ' ' +
+            new Date().toLocaleTimeString();
+
         pool.query(
             'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
-            [req.user.id, filedata.originalname, new Date().toLocaleDateString() + ' ' +new Date().toLocaleTimeString().replace(/:/g, '.'),md5(fs.readFileSync(filedata.path,'utf-8'))],
+            [
+                req.user.id,
+                filedata.originalname,
+                date,
+                md5(fs.readFileSync(filedata.path, 'utf-8')),
+            ],
             // callback для отладки
-            function (error, results, fields) {      
+            function (error, results, fields) {
                 if (error) {
                     console.log('Ошибка записи в uploaded_files');
                     console.log(error);
@@ -168,7 +178,7 @@ app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
                 console.log('Загрузка файла зафиксирована');
             }
         );
-        res.send('Файл загружен');
+        res.json({ message: 'Файл загружен' });
     }
 });
 
