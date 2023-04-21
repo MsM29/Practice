@@ -38,15 +38,16 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
-
+let files=[];
 // вставка ссылок для загрузки файлов на страницу
 function loading(filenames) {
     removeAllChildNodes(pathList);
     filenames.forEach((filename) => {
         let path = document.createElement('a');
-        path.innerHTML = `<li><a href='./${filename}' download>${filename}</a></li><br>`;
+        path.innerHTML = `<li><a class='download_file' href='./${filename}' download onclick="a('${filename}')">${filename}</a></li><br>`;
         pathList.appendChild(path);
     });
+    files = document.getElementsByClassName('download_file')
 }
 
 //получение логина пользователя
