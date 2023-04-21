@@ -182,4 +182,27 @@ app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
     }
 });
 
+//фиксируем скачивание файла в бд
+app.post('/download', jwt_methods.decodeAccessToken, function(request, response){
+    const filename= request.body.filename
+    date = new Date().toISOString().slice(0, -14) +
+        ' ' +
+        new Date().toLocaleTimeString();
+       console.log(filename, date)
+       pool.query(
+        'INSERT INTO downloaded_files (user_id, filename, download_time, is_processed) VALUES (?, ?, ?, ?);',
+        [request.user.id, filename, date, false],
+        // callback для отладки
+        function (error, results, fields) {      
+            if (error) {
+                console.log('Ошибка записи в downloaded_files');
+                console.log(error);
+            }
+            console.log('Скачивание файла зафиксировано');
+        }
+    );
+
+}
+)
+
 start_server();

@@ -2,7 +2,7 @@ body {
   margin: 60px 30px 10px;
 }
   
-  .drop-container {
+  #drop-container {
     position: relative;
     display: flex;
     margin-left: auto;
@@ -23,12 +23,12 @@ body {
     margin-bottom: 10px;
   }
   
-  .drop-container:hover {
+  #drop-container:hover {
     background: #eee;
     border-color: #111;
   }
   
-  .drop-container:hover .drop-title {
+  #drop-container:hover .drop-title {
     color: #000000;
   }
   
@@ -75,7 +75,7 @@ body {
     display: none;
   }
   
-  .file-container,.statistics-container {
+ .container-with-data {
     position: relative;
     display: flex;
     gap: 10px;
@@ -91,12 +91,12 @@ body {
     box-sizing: border-box;
   }
 
-  .file-container:hover {
+  .container-with-data:hover {
     background: #eee;
     border-color: #111;
   }
 
-.container{
+#container{
   position: relative;
   display: flex;
   flex-wrap: nowrap;

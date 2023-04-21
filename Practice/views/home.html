@@ -19,17 +19,30 @@
         </div>
     </div>
     <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-        <label class="drop-container">
-            <input type="file" class="buttons-in-flexbox" name="filedata"/>
+        <label id="drop-container">
+            <input type="file" name="filedata"/>
             <button type="submit" id="upload-button">Загрузить файл</button>
         </label>
-        <label class="container">
-        <label class="file-container">
+        <label id="container">
+        <label class="container-with-data">
              <h2>Файлы:</h2>
              <button type="button" id="update-button">Обновить</button>
-            <ul id="pathList">Кликните для получения списка файлов</ul>
+           
+             <ul id="pathList">Кликните для получения списка файлов  
+                
+        </ul>
+        <script>function a(file){
+            fetch("/download", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({filename: file})
+            })
+
+            }</script>
         </label>
-        <label class="statistics-container">
+        <label class="container-with-data">
             <h2>Статистика:</h2>
         </label>
     </label>
