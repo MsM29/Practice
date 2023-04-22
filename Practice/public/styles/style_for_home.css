@@ -157,4 +157,37 @@ h2{
 
 .download-file {
   margin-bottom: 10px;
+  display: flex;
+}
+
+.show-context-menu {
+  position: relative;
+  display: none;
+  margin-left: auto;
+  margin-right: 0;
+  background: url(../images/menu-icon.png) no-repeat top right;
+  height: 17px;
+  width: 10px;
+  border: none;
+}
+
+#context-menu {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  background-color: #fff; 
+  border: 1px solid #333; 
+  padding: 5px;
+  -moz-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
+  -webkit-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
+  box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
+}
+
+#processing-button {
+  background-color: #fff; 
+  border: none;
+}
+
+#processing-button:hover {
+  background-color: #eee;
 }

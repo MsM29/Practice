@@ -203,4 +203,9 @@ app.post('/download', jwt_methods.decodeAccessToken, (request, response) => {
     );
 });
 
+app.post('/processing', jwt_methods.decodeAccessToken, (request, response) => {
+    console.log(request.body.filename)
+    response.sendStatus(200)
+})
+
 start_server();
