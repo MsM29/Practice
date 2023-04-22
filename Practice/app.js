@@ -41,11 +41,11 @@ app.use('/home', express.static(__dirname + '/public'));
 app.use('/home', express.static(__dirname + '/uploads'));
 
 // обработчики get-запросов
-app.get('/login', function (request, response) {
+app.get('/login', (request, response) => {
     response.sendFile(__dirname + '/views/index.html');
 });
 
-app.get('/home', jwt_methods.decodeAccessToken, function (request, response) {
+app.get('/home', jwt_methods.decodeAccessToken, (request, response) => {
     try {
         if (request.headers['get-file-names'] == 'true') {
             const filenames = fs.readdirSync(__dirname + '/uploads');
@@ -60,7 +60,7 @@ app.get('/home', jwt_methods.decodeAccessToken, function (request, response) {
 });
 
 // обработка post-запроса на авторизацию
-app.post('/login', function (request, response) {
+app.post('/login', (request, response) => {
     try {
         const login = request.body.login;
         const hash = request.body.password;
@@ -122,7 +122,7 @@ app.post('/login', function (request, response) {
 });
 
 // log-out
-app.post('/log-out', function (request, response) {
+app.post('/log-out', (request, response) => {
     response.clearCookie('token');
     response.clearCookie('login');
     response.redirect('/login');
@@ -130,10 +130,10 @@ app.post('/log-out', function (request, response) {
 
 // настройка параметров сохранения файлов
 const storageConfig = multer.diskStorage({
-    destination: (req, file, callback) => {
+    destination: (request, file, callback) => {
         callback(null, 'uploads');
     },
-    filename: (req, file, callback) => {
+    filename: (request, file, callback) => {
         file.originalname = Buffer.from(file.originalname, 'latin1').toString(
             'utf8'
         );
@@ -151,9 +151,9 @@ const storageConfig = multer.diskStorage({
 app.use(multer({ storage: storageConfig }).single('filedata'));
 
 // проверка загрузки файлов
-app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
-    let filedata = req.file;
-    if (!filedata) res.json({ message: 'Ошибка при загрузке файла!' });
+app.post('/upload', jwt_methods.decodeAccessToken, (request, response) => {
+    let filedata = request.file;
+    if (!filedata) response.json({ message: 'Ошибка при загрузке файла!' });
     else {
         //фиксируем загрузку файла в бд
         date =
@@ -164,7 +164,7 @@ app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
         pool.query(
             'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
             [
-                req.user.id,
+                request.user.id,
                 filedata.originalname,
                 date,
                 md5(fs.readFileSync(filedata.path, 'utf-8')),
@@ -178,17 +178,17 @@ app.post('/upload', jwt_methods.decodeAccessToken, function (req, res) {
                 console.log('Загрузка файла зафиксирована');
             }
         );
-        res.json({ message: 'Файл загружен' });
+        response.json({ message: 'Файл загружен' });
     }
 });
 
 //фиксируем скачивание файла в бд
-app.post('/download', jwt_methods.decodeAccessToken, function(request, response){
+app.post('/download', jwt_methods.decodeAccessToken, (request, response) => {
     const filename= request.body.filename
     date = new Date().toISOString().slice(0, -14) +
         ' ' +
         new Date().toLocaleTimeString();
-       console.log(filename, date)
+
        pool.query(
         'INSERT INTO downloaded_files (user_id, filename, download_time, is_processed) VALUES (?, ?, ?, ?);',
         [request.user.id, filename, date, false],
@@ -201,8 +201,6 @@ app.post('/download', jwt_methods.decodeAccessToken, function(request, response)
             console.log('Скачивание файла зафиксировано');
         }
     );
-
-}
-)
+});
 
 start_server();

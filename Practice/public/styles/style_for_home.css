@@ -154,3 +154,7 @@ h2{
 #log-out:hover {
   background: #2f2f30;
 }
+
+.download-file {
+  margin-bottom: 10px;
+}

@@ -33,7 +33,7 @@ uploadForm.addEventListener('submit', async event => {
         body: formData
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => alert(data.message));
 })
 
 // очищаем список файлов на странице
@@ -42,16 +42,16 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
-let files=[];
+
 // вставка ссылок для загрузки файлов на страницу
 function loading(filenames) {
     removeAllChildNodes(pathList);
     filenames.forEach((filename) => {
-        let path = document.createElement('a');
-        path.innerHTML = `<li><a class='download_file' href='./${filename}' download onclick="a('${filename}')">${filename}</a></li><br>`;
-        pathList.appendChild(path);
+        let listItem = document.createElement('li');
+        listItem.className = 'download-file';
+        listItem.innerHTML = `<a href='./${filename}' download onclick="sendFilename('${filename}')">${filename}</a>`;
+        pathList.appendChild(listItem);
     });
-    files = document.getElementsByClassName('download_file')
 }
 
 //получение логина пользователя
