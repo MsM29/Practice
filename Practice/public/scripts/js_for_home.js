@@ -85,7 +85,9 @@ processingButton.addEventListener('click', async () => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({filename: currentFile})
-    });
+    })
+    .then(response => response.json())
+    .then(data => alert(data.message))
 })
 
 // показать контекстное меню
@@ -97,14 +99,6 @@ function showContextMenu(event) {
 
 // скрываем меню, когда курсор с него уходит
 processingButton.addEventListener('mouseout', () => contextMenu.style.display = 'none');
-
-//получение логина пользователя
-const login = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("login="))
-    .split("=")[1]
-    .replace('%40', '@');
-document.getElementById('current-user').innerHTML = login;
 
 //получение статистики (пока без статистики)
 updateStatisticsButton.addEventListener('click', async () => {
@@ -121,4 +115,12 @@ function plug(message){
     statistics.innerHTML = message
     statisticsList.appendChild(statistics);
 }
+
+//получение логина пользователя
+const login = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("login="))
+    .split("=")[1]
+    .replace('%40', '@');
+document.getElementById('current-user').innerHTML = login;
 

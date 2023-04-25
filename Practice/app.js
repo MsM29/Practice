@@ -6,8 +6,7 @@ const jwt_methods = require('./jwt_methods.js');
 const multer = require('multer');
 const fs = require('fs');
 const md5 = require('md5');
-const { request } = require('http');
-const { log } = require('console');
+const processing = require('./file_processing.js');
 
 const port = 8080;
 const app = express(); // объект приложения
@@ -213,11 +212,15 @@ app.post('/download', jwt_methods.decodeAccessToken, (request, response) => {
     );
 });
 
+// обработка запроса на конвертацию файлов
 app.post('/processing', jwt_methods.decodeAccessToken, (request, response) => {
-    console.log(request.body.filename)
-    response.sendStatus(200)
+    try {
+        processing.start(request.body.filename);
+        response.json({ message: 'Файл конвертирован и сохранён на сервере'});
+    } catch (error) {
+        response.json({ message: 'Ошибка конвертации! Поддерживаемые форматы: jpeg, jpg, png, svg'});
+    }
 })
-
 
 // обработка запроса на получение статистики (пока без статистики)
 app.get('/get-statistics', jwt_methods.decodeAccessToken, (request, response) => {
