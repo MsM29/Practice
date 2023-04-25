@@ -1,15 +1,16 @@
-const button = document.getElementById('update-button');
+const updateFileButton = document.getElementById('update-file-button');
 const fileUploader = document.getElementById('file-uploader');
 const pathList = document.getElementById('pathList');
 const logOutButton = document.getElementById('log-out');
 const uploadForm = document.getElementById('upload-form');
 const contextMenu = document.getElementById('context-menu');
 const processingButton = document.getElementById('processing-button');
-
+const updateStatisticsButton = document.getElementById('update-statistics-button')
+const statisticsList = document.getElementById('statisticsList')
 let currentFile; // запоминает файл, для которого было вызвано меню
 
 // получение списка файлов на сервере
-button.addEventListener('click', async () => {
+updateFileButton.addEventListener('click', async () => {
     await fetch('/get-filenames')
     .then(response =>  response.json())
     .then(data => loading(Object.values(data)));
@@ -104,3 +105,8 @@ const login = document.cookie
     .split("=")[1]
     .replace('%40', '@');
 document.getElementById('current-user').innerHTML = login;
+
+updateStatisticsButton.addEventListener('click',plug)
+function plug(){
+    removeAllChildNodes(statisticsList);
+}

@@ -71,7 +71,7 @@ body {
     background: #2f2f30;
   }
 
-  #update-button{
+  #update-file-button, #update-statistics-button{
     display: none;
   }
   
@@ -110,7 +110,7 @@ h2{
   margin-bottom: 0%;
 }
 
-#pathList{
+#pathList, #statisticsList{
   margin: 0%;
 }
 
@@ -181,11 +181,16 @@ h2{
   -moz-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
   -webkit-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
   box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
+  border-radius: 7px;
+  padding: 0%;
 }
 
 #processing-button {
   background-color: #fff; 
   border: none;
+  transition: background .2s ease-in-out;
+  padding: 5px;
+  border-radius: 7px;
 }
 
 #processing-button:hover {
