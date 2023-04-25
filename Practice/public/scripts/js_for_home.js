@@ -106,7 +106,19 @@ const login = document.cookie
     .replace('%40', '@');
 document.getElementById('current-user').innerHTML = login;
 
-updateStatisticsButton.addEventListener('click',plug)
-function plug(){
+//получение статистики (пока без статистики)
+updateStatisticsButton.addEventListener('click', async () => {
+    await fetch('/get-statistics')
+    .then(response =>  response.json())
+    .then(data => plug(data));
+});
+
+//втсавка статистики на страницу (пока без статистики)
+function plug(message){
     removeAllChildNodes(statisticsList);
+    let statistics = document.createElement('div');
+    statistics.className = 'statistics';
+    statistics.innerHTML = message
+    statisticsList.appendChild(statistics);
 }
+

@@ -218,4 +218,21 @@ app.post('/processing', jwt_methods.decodeAccessToken, (request, response) => {
     response.sendStatus(200)
 })
 
+
+// обработка запроса на получение статистики (пока без статистики)
+app.get('/get-statistics', jwt_methods.decodeAccessToken, (request, response) => {
+    try {
+        if (request.user.user_group === 'A') {
+            const message = 'Статистика для группы A'
+            response.send(JSON.stringify(message));
+        }
+        else {
+            const message = 'Статистика для группы B'
+            response.send(JSON.stringify(message));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 start_server();
