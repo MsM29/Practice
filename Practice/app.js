@@ -6,6 +6,8 @@ const jwt_methods = require('./jwt_methods.js');
 const multer = require('multer');
 const fs = require('fs');
 const md5 = require('md5');
+const { request } = require('http');
+const { log } = require('console');
 
 const port = 8080;
 const app = express(); // объект приложения
@@ -38,7 +40,7 @@ app.use(cookieParser());
 // отправка статических данных
 app.use('/login', express.static(__dirname + '/public'));
 app.use('/home', express.static(__dirname + '/public'));
-app.use('/home', express.static(__dirname + '/uploads'));
+app.use('/home', express.static(__dirname + '/file_storage'));
 
 // обработчики get-запросов
 app.get('/login', (request, response) => {
@@ -47,13 +49,19 @@ app.get('/login', (request, response) => {
 
 app.get('/home', jwt_methods.decodeAccessToken, (request, response) => {
     try {
-        if (request.headers['get-file-names'] == 'true') {
-            const filenames = fs.readdirSync(__dirname + '/uploads');
-            response.send(JSON.stringify(filenames));
-        } else {
-            response.cookie('login', request.user.login);
-            response.sendFile(__dirname + '/views/home.html');
-        }
+        response.cookie('login', request.user.login);
+        response.sendFile(__dirname + '/views/home.html');
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+// обработка запроса на получение списка файлов
+app.get('/get-filenames', jwt_methods.decodeAccessToken, (request, response) => {
+    try {
+        const filenames = fs.readdirSync(__dirname + '/file_storage/uploads')
+            .concat(fs.readdirSync(__dirname + '/file_storage/processed'));
+        response.send(JSON.stringify(filenames));
     } catch (error) {
         console.log(error);
     }
@@ -107,7 +115,9 @@ app.post('/login', (request, response) => {
 
                     // запись токена в куки и отправка сообщения об успешной авторизации
                     console.log('Авторизация пройдена');
-                    response.cookie('token', `Bearer ${token}`);
+                    response.cookie('token', `Bearer ${token}`, {
+                        httpOnly: true
+                    });
                     return response.json({
                         message: 'success_auth',
                     });
@@ -131,7 +141,7 @@ app.post('/log-out', (request, response) => {
 // настройка параметров сохранения файлов
 const storageConfig = multer.diskStorage({
     destination: (request, file, callback) => {
-        callback(null, 'uploads');
+        callback(null, './file_storage/uploads');
     },
     filename: (request, file, callback) => {
         file.originalname = Buffer.from(file.originalname, 'latin1').toString(

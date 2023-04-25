@@ -10,12 +10,7 @@ let currentFile; // запоминает файл, для которого бы�
 
 // получение списка файлов на сервере
 button.addEventListener('click', async () => {
-    await fetch('/home', {
-        method: 'GET',
-        headers: {
-            'Get-File-Names': 'true',
-        },
-    })
+    await fetch('/get-filenames')
     .then(response =>  response.json())
     .then(data => loading(Object.values(data)));
 });
@@ -51,11 +46,16 @@ function removeAllChildNodes(parent) {
 function loading(filenames) {
     removeAllChildNodes(pathList);
     filenames.forEach((filename) => {
+        let folder = 'uploads';
+        if (filename.slice(0, 9) == 'processed') {
+            folder = 'processed';
+        }
+
         let downloadFile = document.createElement('div');
         downloadFile.className = 'download-file';
         downloadFile.innerHTML = 
         `<li>
-            <a href="./${filename}" download onclick='sendFilename("${filename}")'>
+            <a href="./${folder}/${filename}" download onclick='sendFilename("${filename}")'>
                 ${filename}
             </a>
         </li>

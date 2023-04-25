@@ -13,7 +13,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 80px;
-    width: 500px;
+    max-width: 500px;
     padding: 10px;
     border-radius: 20px;
     border: 2px dashed #222;
