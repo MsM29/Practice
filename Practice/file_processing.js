@@ -8,8 +8,8 @@ module.exports.start = function(name) {
         throw new Error('Ошибка обработки файла');
     }
 
-    inputPath = `./file_storage/uploads/'${name}'`
-    outputPath = `./file_storage/processed/'processed ${name.replace(extension, 'pdf')}'` 
+    inputPath = `./file_storage/uploads/"${name}"`
+    outputPath = `./file_storage/processed/"processed ${name.replace(extension, 'pdf')}"` 
 
     exec(`convert ${inputPath} ${outputPath}`, (error, stdout, stderr) => {
         if (error) {
