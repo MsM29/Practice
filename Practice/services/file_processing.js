@@ -1,15 +1,17 @@
 const { exec } = require("child_process");
+const bd = require('./bd_operations');
 
-module.exports.start = function(name) {
+
+module.exports.start = function(id, name) {
     extension = name.split('.').pop()
     allowedExtensions = ['jpg', 'jpeg', 'png', 'svg']
 
     if (!allowedExtensions.includes(extension)) {
         throw new Error('Ошибка обработки файла');
     }
-
     inputPath = `./file_storage/uploads/"${name}"`
-    outputPath = `./file_storage/processed/"processed ${name.replace(extension, 'pdf')}"` 
+    newname = `processed ${name.replace(extension, 'pdf')}`
+    outputPath = `./file_storage/processed/"${newname}"` 
 
     exec(`convert ${inputPath} ${outputPath}`, (error, stdout, stderr) => {
         if (error) {
@@ -21,7 +23,7 @@ module.exports.start = function(name) {
             throw new Error('Ошибка обработки файла');
         }
         console.log('Файл обработан');
+        bd.fixProcessing(id, newname)
     });
-
 }
 

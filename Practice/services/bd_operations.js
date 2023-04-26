@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const md5 = require('md5');
 const fs = require('fs');
+const { has } = require('underscore');
 
 // данные для подключения к mysql (удалённый сервер на db4free.net)
 const pool = mysql.createPool({
@@ -67,7 +68,6 @@ module.exports.fixUpload = function(id, filedata) {
         new Date().toISOString().slice(0, -14) +
         ' ' +
         new Date().toLocaleTimeString();
-
         pool.query(
             'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
             [
@@ -103,4 +103,22 @@ module.exports.fixDownload = function(id, filename) {
         }
         console.log('Скачивание файла зафиксировано');
     });
+}
+
+module.exports.fixProcessing = function(id, filename) {
+    date = new Date().toISOString().slice(0, -14)
+    timeNow = new Date().toLocaleTimeString();
+    hash = md5(fs.readFileSync(`./file_storage/processed/${filename}`, 'utf-8'))
+    pool.query(
+        'INSERT INTO processed_files (user_id, processing_date, processing_time, new_filename, hash) VALUES (?, ?, ?, ?, ?);',
+        [id, date, timeNow, filename, hash],
+        // callback для отладки
+        function (error, results, fields) {
+            if (error) {
+                console.log('Ошибка записи в processed_files');
+                console.log(error);
+            }
+            console.log('Обработка файла зафиксирована');
+        }
+    );
 }

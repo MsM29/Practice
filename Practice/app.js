@@ -134,7 +134,7 @@ app.post('/download', jwtMethods.decodeAccessToken, (request, response) => {
 // обработка запроса на конвертацию файлов
 app.post('/processing', jwtMethods.decodeAccessToken, (request, response) => {
     try {
-        processing.start(request.body.filename);
+        processing.start( request.user.id, request.body.filename);
         response.json({ message: 'Файл конвертирован и сохранён на сервере'});
     } catch (error) {
         response.json({ message: 'Ошибка конвертации! Поддерживаемые форматы: jpeg, jpg, png, svg'});
