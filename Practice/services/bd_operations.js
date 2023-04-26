@@ -91,18 +91,29 @@ module.exports.fixDownload = function(id, filename) {
     date = new Date().toISOString().slice(0, -14) +
     ' ' +
     new Date().toLocaleTimeString();
-
-   pool.query(
-    'INSERT INTO downloaded_files (user_id, filename, download_time, is_processed) VALUES (?, ?, ?, ?);',
-    [id, filename, date, false],
-    // callback для отладки
-    function (error, results, fields) {      
-        if (error) {
-            console.log('Ошибка записи в downloaded_files');
-            console.log(error);
-        }
-        console.log('Скачивание файла зафиксировано');
-    });
+    is_processed = false
+    pool.query(
+        `SELECT new_filename FROM processed_files WHERE new_filename='${filename}'`,
+        function (error, results, fields) {
+            if (error) {
+                console.log('Ошибка проверки наличия в processed_files');
+                console.log(error);
+            }
+            if (!(results.toString() === '')) {
+                is_processed = true
+            }
+            pool.query(
+                'INSERT INTO downloaded_files (user_id, filename, download_time, is_processed) VALUES (?, ?, ?, ?);',
+                [id, filename, date, is_processed],
+                // callback для отладки
+                function (error, results, fields) {
+                    if (error) {
+                        console.log('Ошибка записи в downloaded_files');
+                        console.log(error);
+                    }
+                    console.log('Скачивание файла зафиксировано');
+                });
+        });
 }
 
 module.exports.fixProcessing = function(id, filename) {
