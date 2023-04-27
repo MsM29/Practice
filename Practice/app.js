@@ -146,12 +146,12 @@ app.get('/get-statistics', jwtMethods.decodeAccessToken, (request, response) => 
     try {
         let message
         if (request.user.user_group === 'A') {
-             message = 'Статистика для группы A'
-            response.send(JSON.stringify(message));
+            message=bd.requestStatisticsForA(request.user.id, bdResponse => {
+                response.send(JSON.stringify(bdResponse));
+            })
         }
         else {
-            message=bd.requestStatistics(request.user.id, bdResponse => {
-                console.log(bdResponse)
+            message=bd.requestStatisticsForB(request.user.id, bdResponse => {
                 response.send(JSON.stringify(bdResponse));
             })
         }

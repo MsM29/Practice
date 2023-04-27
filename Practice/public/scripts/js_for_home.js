@@ -110,10 +110,13 @@ updateStatisticsButton.addEventListener('click', async () => {
 //втсавка статистики на страницу (пока без статистики)
 function plug(message){
     removeAllChildNodes(statisticsList);
-    let statistics = document.createElement('div');
-    statistics.className = 'statistics';
-    statistics.innerHTML = message
-    statisticsList.appendChild(statistics);
+    
+    for(let i = 0; i < message.length; i++) {
+        let statistics = document.createElement('div');
+        statistics.className = 'statistics';
+        statistics.innerHTML = message[i]
+        statisticsList.appendChild(statistics);
+    }
 }
 
 //получение логина пользователя
