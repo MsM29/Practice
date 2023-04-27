@@ -1,7 +1,6 @@
 const mysql = require('mysql');
 const md5 = require('md5');
 const fs = require('fs');
-const { has } = require('underscore');
 
 // данные для подключения к mysql (удалённый сервер на db4free.net)
 const pool = mysql.createPool({
@@ -43,11 +42,7 @@ module.exports.checkAuth = function (login, hash, callback) {
 
 // фиксация времени успешной авторизации в бд
 function fixAuth(results) {
-    date =
-        new Date().toISOString().slice(0, -14) +
-        ' ' +
-        new Date().toLocaleTimeString();
-
+    date = new Date();
     pool.query(
         'INSERT INTO auth_statistics (id, login, auth_time) VALUES (?, ?, ?);',
         [results[0].id, results[0].login, date],
@@ -64,10 +59,7 @@ function fixAuth(results) {
 
 // фиксация в бд загрузки файла
 module.exports.fixUpload = function(id, filedata) {
-    date =
-        new Date().toISOString().slice(0, -14) +
-        ' ' +
-        new Date().toLocaleTimeString();
+    date = new Date();
         pool.query(
             'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
             [
@@ -89,18 +81,17 @@ module.exports.fixUpload = function(id, filedata) {
 
 // фиксация в бд скачивания файла
 module.exports.fixDownload = function(id, filename) {
-    date = new Date().toISOString().slice(0, -14) +
-    ' ' +
-    new Date().toLocaleTimeString();
-    is_processed = false
+    date = new Date();
+    let is_processed = false;
     pool.query(
+        // проверяем, есть ли файл в таблице обработанных
         `SELECT new_filename FROM processed_files WHERE new_filename='${filename}'`,
         function (error, results, fields) {
             if (error) {
                 console.log('Ошибка проверки наличия в processed_files');
                 console.log(error);
             }
-            if (!(results.toString() === '')) {
+            if (results.length != 0) {
                 is_processed = true
             }
             pool.query(
@@ -113,18 +104,20 @@ module.exports.fixDownload = function(id, filename) {
                         console.log(error);
                     }
                     console.log('Скачивание файла зафиксировано');
-                });
-        });
+                }
+            );
+        }
+    );
 }
 
 // фиксация в бд обработки файла
 module.exports.fixProcessing = function(id, filename) {
-    date = new Date().toISOString().slice(0, -14)
-    timeNow = new Date().toLocaleTimeString();
+    date = new Date();
     hash = md5(fs.readFileSync(`./file_storage/processed/${filename}`, 'utf-8'))
     pool.query(
-        'INSERT INTO processed_files (user_id, processing_date, processing_time, new_filename, hash) VALUES (?, ?, ?, ?, ?);',
-        [id, date, timeNow, filename, hash],
+        'INSERT INTO processed_files (user_id, processing_date, new_filename, hash, week) \
+        VALUES (?, ?, ?, ?, WEEK(processing_date, 1));',
+        [id, date, filename, hash],
         // callback для отладки
         function (error, results, fields) {
             if (error) {
@@ -149,5 +142,6 @@ module.exports.requestStatistics = function(id, callback)
             }
             bdResponse = `Всего вы обработали файлов: ${results[0].count}`
             callback(bdResponse)
-        });
+        }
+    );
 }
