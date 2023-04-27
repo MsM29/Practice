@@ -87,6 +87,7 @@ module.exports.fixUpload = function(id, filedata) {
         );
 }
 
+// фиксация в бд скачивания файла
 module.exports.fixDownload = function(id, filename) {
     date = new Date().toISOString().slice(0, -14) +
     ' ' +
@@ -116,6 +117,7 @@ module.exports.fixDownload = function(id, filename) {
         });
 }
 
+// фиксация в бд обработки файла
 module.exports.fixProcessing = function(id, filename) {
     date = new Date().toISOString().slice(0, -14)
     timeNow = new Date().toLocaleTimeString();
@@ -132,4 +134,20 @@ module.exports.fixProcessing = function(id, filename) {
             console.log('Обработка файла зафиксирована');
         }
     );
+}
+
+//получение статистики 
+module.exports.requestStatistics = function(id, callback)
+{
+   let bdResponse;
+    pool.query(
+        `SELECT COUNT(*) AS count FROM processed_files WHERE user_id='${id}'`,
+        function (error, results, fields) {
+            if (error) {
+                console.log('Ошибка');
+                console.log(error);
+            }
+            bdResponse = `Всего вы обработали файлов: ${results[0].count}`
+            callback(bdResponse)
+        });
 }

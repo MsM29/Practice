@@ -144,13 +144,16 @@ app.post('/processing', jwtMethods.decodeAccessToken, (request, response) => {
 // обработка запроса на получение статистики (пока без статистики)
 app.get('/get-statistics', jwtMethods.decodeAccessToken, (request, response) => {
     try {
+        let message
         if (request.user.user_group === 'A') {
-            const message = 'Статистика для группы A'
+             message = 'Статистика для группы A'
             response.send(JSON.stringify(message));
         }
         else {
-            const message = 'Статистика для группы B'
-            response.send(JSON.stringify(message));
+            message=bd.requestStatistics(request.user.id, bdResponse => {
+                console.log(bdResponse)
+                response.send(JSON.stringify(bdResponse));
+            })
         }
     } catch (error) {
         console.log(error);
