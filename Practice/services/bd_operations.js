@@ -135,33 +135,19 @@ module.exports.requestStatisticsForB = function(id, callback)
 {
     let bdResponse=[];
     pool.query(
-        `SELECT * FROM processed_files WHERE user_id='${id}'`,
+        `SELECT week, COUNT(*) AS count FROM processed_files WHERE user_id=${id} GROUP BY week`,
         function (error, results, fields) {
             if (error) {
                 console.log('Ошибка');
                 console.log(error);
             }
-            let startWeek = results[0].week;
-            let filesCount = 0; 
 
-            for (let i = 0; i < results.length; i++) {
-                const dataPacket = results[i];
-                if (dataPacket.week == startWeek) {
-                    filesCount++;
-                    if (i + 1 == results.length) {
-                        bdResponse.push(`За ${startWeek} неделю обработано файлов: ${filesCount}`);
-                    }
-                } 
-                else {
-                    bdResponse.push(`За ${startWeek} неделю обработано файлов: ${filesCount}`);
-                    startWeek++;
-                    filesCount = 1;
-                    if (i + 1 == results.length) {
-                        bdResponse.push(`За ${startWeek} неделю обработано файлов: ${filesCount}`);
-                    }
-                }
-            }
-            bdResponse.push(`Всего вы обработали файлов: ${results.length}`);
+            let total = 0;
+            results.forEach(row => {
+                bdResponse.push(`За ${row.week} неделю обработано файлов: ${row.count}`);
+                total += row.count;
+            });
+            bdResponse.push(`Всего вы обработали файлов: ${total}`);
             callback(bdResponse);
         }
     );
