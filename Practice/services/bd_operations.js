@@ -136,10 +136,10 @@ module.exports.fixProcessing = function(id, filename) {
     );
 }
 
-//получение статистики 
-module.exports.requestStatistics = function(id, callback)
+//получение статистики для пользователей группы B
+module.exports.requestStatisticsForB = function(id, callback)
 {
-   let bdResponse;
+   let bdResponse=[];
     pool.query(
         `SELECT COUNT(*) AS count FROM processed_files WHERE user_id='${id}'`,
         function (error, results, fields) {
@@ -147,7 +147,37 @@ module.exports.requestStatistics = function(id, callback)
                 console.log('Ошибка');
                 console.log(error);
             }
-            bdResponse = `Всего вы обработали файлов: ${results[0].count}`
+            bdResponse[0] = `Всего вы обработали файлов: ${results[0].count}`
             callback(bdResponse)
+        });
+}
+
+//получение статистики для пользователей группы A
+module.exports.requestStatisticsForA = function(id, callback)
+{
+   let logins=[]
+   let bdResponse=[];
+    pool.query(
+        `SELECT id, login FROM accounts`,
+        function (error, results, fields) {
+            if (error) {
+                console.log('Ошибка');
+                console.log(error);
+            }
+            for (let i = 0; i < results.length; i++) {
+                logins[i] = results[i].login
+            }
+            pool.query(
+                `SELECT user_id, COUNT(*) AS count FROM processed_files GROUP BY user_id`,
+                function (error, results, fields) {
+                    if (error) {
+                        console.log('Ошибка');
+                        console.log(error);
+                    }
+                    for (let i = 0; i < results.length; i++) {
+                        bdResponse[i]="Пользователь "+logins[i] + " обработал файлов: "+results[i].count
+                    }
+                    callback(bdResponse)
+                });
         });
 }
