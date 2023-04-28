@@ -22,6 +22,6 @@ module.exports.decodeAccessToken = function (request, response, next) {
         request.user = decodedToken;
         next();
     } catch (error) {
-        response.status(401).json({ message: 'Пользователь не авторизован' });
+        response.status(401).redirect('/login')
     }
 };

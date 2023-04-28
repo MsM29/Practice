@@ -11,17 +11,21 @@ let currentFile; // запоминает файл, для которого бы�
 
 // получение списка файлов на сервере
 updateFileButton.addEventListener('click', async () => {
+    updateFileButton.disabled = true;
     await fetch('/get-filenames')
     .then(response =>  response.json())
-    .then(data => loading(Object.values(data)));
+    .then(data => loading(Object.values(data)))
+    .then(()=>updateFileButton.disabled = false);
 });
 
 // log-out
 logOutButton.addEventListener('click', async () => {
+    logOutButton.disabled = true;
     await fetch('/log-out', {
         method: 'POST'
     })
-    .then(() => window.location.pathname = '/login');
+    .then(() => window.location.pathname = '/login')
+    .then(()=>logOutButton.disabled = false);
 });
 
 // отправка файла на сервер
@@ -79,6 +83,7 @@ function loading(filenames) {
 
 // обработчик для кнопки в контекстном меню
 processingButton.addEventListener('click', async () => {
+    processingButton.disabled = true;
     await fetch('/processing', {
         method: 'POST', 
         headers: {
@@ -88,6 +93,7 @@ processingButton.addEventListener('click', async () => {
     })
     .then(response => response.json())
     .then(data => alert(data.message))
+    .then(()=>processingButton.disabled = false);
 })
 
 // показать контекстное меню
@@ -100,22 +106,29 @@ function showContextMenu(event) {
 // скрываем меню, когда курсор с него уходит
 processingButton.addEventListener('mouseout', () => contextMenu.style.display = 'none');
 
-//получение статистики (пока без статистики)
+//получение статистики 
 updateStatisticsButton.addEventListener('click', async () => {
+    updateStatisticsButton.disabled = true;
+    removeAllChildNodes(statisticsList);
+    showMessage('Формирование статистики...')
     await fetch('/get-statistics')
     .then(response =>  response.json())
-    .then(data => plug(data));
+    .then(data => plug(data))
+    .then(()=>updateStatisticsButton.disabled = false);
 });
 
-//втсавка статистики на страницу (пока без статистики)
+function showMessage(message){
+    let statistics = document.createElement('div');
+    statistics.className = 'statistics';
+    statistics.innerHTML = message;
+    statisticsList.appendChild(statistics);
+}
+
+//вставка статистики на страницу
 function plug(message){
     removeAllChildNodes(statisticsList);
-    
     for(let i = 0; i < message.length; i++) {
-        let statistics = document.createElement('div');
-        statistics.className = 'statistics';
-        statistics.innerHTML = message[i]
-        statisticsList.appendChild(statistics);
+        showMessage(message[i]);
     }
 }
 

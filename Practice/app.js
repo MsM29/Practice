@@ -141,7 +141,7 @@ app.post('/processing', jwtMethods.decodeAccessToken, (request, response) => {
     }
 })
 
-// обработка запроса на получение статистики (пока без статистики)
+// обработка запроса на получение статистики 
 app.get('/get-statistics', jwtMethods.decodeAccessToken, (request, response) => {
     try {
         let message
