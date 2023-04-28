@@ -184,7 +184,7 @@ module.exports.requestStatisticsForA = function(id, callback)
                         else 
                             total[row.user_id] += row.count
                     })
-                    for(let i=0; i<total.length-1; i++)
+                    for(let i=0; i<ident.length; i++)
                     bdResponse.unshift(`${logins[ident[i]]} всего обработал файлов: ${total[ident[i]]}`);
                     callback(bdResponse)
                 });
