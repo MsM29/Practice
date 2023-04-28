@@ -196,3 +196,7 @@ h2{
 #processing-button:hover {
   background-color: #eee;
 }
+
+.statistics{
+  margin-bottom: 10px;
+}

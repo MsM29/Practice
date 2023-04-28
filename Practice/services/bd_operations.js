@@ -117,7 +117,7 @@ module.exports.fixProcessing = function(id, filename) {
     hash = md5(fs.readFileSync(`./file_storage/processed/${filename}`, 'utf-8'))
     pool.query(
         'INSERT INTO processed_files (user_id, processing_date, new_filename, hash, week) \
-        VALUES (?, ?, ?, ?, WEEK(processing_date, 1) + 3);',
+        VALUES (?, ?, ?, ?, WEEK(processing_date, 1));',
         [id, date, filename, hash],
         // callback для отладки
         function (error, results, fields) {
@@ -135,19 +135,18 @@ module.exports.requestStatisticsForB = function(id, callback)
 {
     let bdResponse=[];
     pool.query(
-        `SELECT week, COUNT(*) AS count FROM processed_files WHERE user_id=${id} GROUP BY week`,
+        `SELECT week, COUNT(*) AS count FROM processed_files WHERE user_id=${id} GROUP BY week ORDER BY week DESC`,
         function (error, results, fields) {
             if (error) {
                 console.log('Ошибка');
                 console.log(error);
             }
-
             let total = 0;
             results.forEach(row => {
                 bdResponse.push(`За ${row.week} неделю обработано файлов: ${row.count}`);
                 total += row.count;
             });
-            bdResponse.push(`Всего вы обработали файлов: ${total}`);
+            bdResponse.unshift(`Всего вы обработали файлов: ${total}`);
             callback(bdResponse);
         }
     );
@@ -157,6 +156,7 @@ module.exports.requestStatisticsForB = function(id, callback)
 module.exports.requestStatisticsForA = function(id, callback)
 {
    let logins=[]
+   let ident=[]
    let bdResponse=[];
     pool.query(
         `SELECT id, login FROM accounts`,
@@ -166,18 +166,26 @@ module.exports.requestStatisticsForA = function(id, callback)
                 console.log(error);
             }
             for (let i = 0; i < results.length; i++) {
-                logins[i] = results[i].login
+                ident.push(results[i].id)
+                logins[ident[i]] = results[i].login
             }
             pool.query(
-                `SELECT user_id, COUNT(*) AS count FROM processed_files GROUP BY user_id`,
+                `SELECT user_id, week, COUNT(*) AS count FROM processed_files GROUP BY week, user_id ORDER BY week DESC`,
                 function (error, results, fields) {
                     if (error) {
                         console.log('Ошибка');
                         console.log(error);
                     }
-                    for (let i = 0; i < results.length; i++) {
-                        bdResponse[i]="Пользователь "+logins[i] + " обработал файлов: "+results[i].count
-                    }
+                    let total = [];
+                    results.forEach(row => {
+                        bdResponse.push(`${logins[row.user_id]} за ${row.week} неделю обработано файлов: ${row.count}`);
+                        if (typeof total[row.user_id] === 'undefined')
+                            total[row.user_id] = row.count
+                        else 
+                            total[row.user_id] += row.count
+                    })
+                    for(let i=0; i<total.length-1; i++)
+                    bdResponse.unshift(`${logins[ident[i]]} всего обработал файлов: ${total[ident[i]]}`);
                     callback(bdResponse)
                 });
         });
