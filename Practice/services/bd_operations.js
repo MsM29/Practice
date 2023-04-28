@@ -61,23 +61,23 @@ function fixAuth(results) {
 // фиксация в бд загрузки файла
 module.exports.fixUpload = function(id, filedata) {
     date = new Date();
-        pool.query(
-            'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
-            [
-                id,
-                filedata.originalname,
-                date,
-                md5(fs.readFileSync(filedata.path, 'utf-8')),
-            ],
-            // callback для отладки
-            function (error, results, fields) {
-                if (error) {
-                    console.log('Ошибка записи в uploaded_files');
-                    console.log(error);
-                }
-                console.log('Загрузка файла зафиксирована');
+    pool.query(
+        'INSERT INTO uploaded_files (user_id, original_name, loading_time, hash) VALUES (?, ?, ?, ?);',
+        [
+            id,
+            filedata.originalname,
+            date,
+            md5(fs.readFileSync(filedata.path, 'utf-8')),
+        ],
+        // callback для отладки
+        function (error, results, fields) {
+            if (error) {
+                console.log('Ошибка записи в uploaded_files');
+                console.log(error);
             }
-        );
+            console.log('Загрузка файла зафиксирована');
+        }
+    );
 }
 
 // фиксация в бд скачивания файла
@@ -143,7 +143,7 @@ module.exports.requestStatisticsForB = function(id, callback)
             }
             let total = 0;
             results.forEach(row => {
-                bdResponse.push(`За ${row.week} неделю обработано файлов: ${row.count}`);
+                bdResponse.push(`За <b>${row.week}</b> неделю обработано файлов: ${row.count}`);
                 total += row.count;
             });
             bdResponse.unshift(`Всего вы обработали файлов: ${total}`);
@@ -178,15 +178,17 @@ module.exports.requestStatisticsForA = function(id, callback)
                     }
                     let total = [];
                     results.forEach(row => {
-                        bdResponse.push(`${logins[row.user_id]} за ${row.week} неделю обработал файлов: ${row.count}`);
+                        bdResponse.push(`За <b>${row.week}</b> неделю <b>${logins[row.user_id]}</b>  обработал файлов: ${row.count}`);
                         if (typeof total[row.user_id] === 'undefined')
                             total[row.user_id] = row.count
                         else 
                             total[row.user_id] += row.count
                     })
                     for(let i=0; i<ident.length; i++)
-                    bdResponse.unshift(`${logins[ident[i]]} всего обработал файлов: ${total[ident[i]]}`);
+                    bdResponse.unshift(`<b>${logins[ident[i]]}</b>  всего обработал файлов: ${total[ident[i]]}`);
                     callback(bdResponse)
-                });
-        });
+                }
+            );
+        }
+    );
 }
