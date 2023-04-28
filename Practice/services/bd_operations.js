@@ -178,7 +178,7 @@ module.exports.requestStatisticsForA = function(id, callback)
                     }
                     let total = [];
                     results.forEach(row => {
-                        bdResponse.push(`${logins[row.user_id]} за ${row.week} неделю обработано файлов: ${row.count}`);
+                        bdResponse.push(`${logins[row.user_id]} за ${row.week} неделю обработал файлов: ${row.count}`);
                         if (typeof total[row.user_id] === 'undefined')
                             total[row.user_id] = row.count
                         else 
