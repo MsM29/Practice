@@ -178,14 +178,14 @@ module.exports.requestStatisticsForA = function(id, callback)
                     }
                     let total = [];
                     results.forEach(row => {
-                        bdResponse.push(`За <b>${row.week}</b> неделю <b>${logins[row.user_id]}</b>  обработал файлов: ${row.count}`);
+                        bdResponse.push(`За <b>${row.week}</b> неделю <b>${logins[row.user_id]}</b> обработал(а) файлов: ${row.count}`);
                         if (typeof total[row.user_id] === 'undefined')
                             total[row.user_id] = row.count
                         else 
                             total[row.user_id] += row.count
                     })
                     for(let i=0; i<ident.length; i++)
-                    bdResponse.unshift(`<b>${logins[ident[i]]}</b>  всего обработал файлов: ${total[ident[i]]}`);
+                    bdResponse.unshift(`<b>${logins[ident[i]]}</b>  всего обработал(а) файлов: ${total[ident[i]]}`);
                     callback(bdResponse)
                 }
             );

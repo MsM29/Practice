@@ -1,5 +1,4 @@
 const md5 = require('md5');
-
 const form = document.getElementById('login-form');
 const button = document.getElementById('but');
 

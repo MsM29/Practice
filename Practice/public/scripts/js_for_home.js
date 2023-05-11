@@ -47,6 +47,17 @@ function removeAllChildNodes(parent) {
     }
 }
 
+//отправка имени файла на сервер
+window.sendFilename = function (file) {
+    fetch('/download', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ filename: file }),
+    });
+}
+
 // вставка ссылок для загрузки файлов на страницу
 function loading(filenames) {
     removeAllChildNodes(pathList);
